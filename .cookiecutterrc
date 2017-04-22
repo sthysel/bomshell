@@ -1,0 +1,45 @@
+# This file exists so you can easily regenerate your project.
+#
+# `cookiepatcher` is a convenient shim around `cookiecutter`
+# for regenerating projects (it will generate a .cookiecutterrc
+# automatically for any template). To use it:
+#
+#    pip install cookiepatcher
+#    cookiepatcher gh:ionelmc/cookiecutter-pylibrary project-path
+#
+# See:
+#    https://pypi.python.org/pypi/cookiepatcher
+#
+# Alternatively, you can run:
+#
+#    cookiecutter --overwrite-if-exists --config-file=project-path/.cookiecutterrc gh:ionelmc/cookiecutter-pylibrary
+
+default_context:
+
+    codacy:                    'no'
+    codeclimate:               'no'
+    codecov:                   'yes'
+    command_line_interface:    'click'
+    command_line_interface_bin_name: 'bomshell'
+    coveralls:                 'no'
+    distribution_name:         'bomshell'
+    email:                     'sthysel@gmail.com'
+    full_name:                 'sthysel'
+    github_username:           'sthysel'
+    landscape:                 'no'
+    package_name:              'bomshell'
+    project_name:              'bomshell'
+    project_short_description: 'Retrieve weather data from the Australian  Bureau of Meteorology'
+    release_date:              'today'
+    repo_name:                 'bomshell'
+    requiresio:                'yes'
+    scrutinizer:               'no'
+    sphinx_doctest:            'no'
+    sphinx_theme:              'sphinx-rtd-theme'
+    test_matrix_configurator:  'no'
+    test_matrix_separate_coverage: 'no'
+    test_runner:               'pytest'
+    travis:                    'yes'
+    version:                   '0.1.0'
+    website:                   'http://sthysel.github.io/'
+    year:                      'now'
