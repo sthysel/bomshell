@@ -20,5 +20,7 @@ cook_config = click.make_pass_decorator(CookConfig, ensure=True)
 @cook_config
 @click.command()
 def main(verbose, cache_path):
-    """  """
-    click.echo(repr(names))
+    """ 
+    Retrieve weather data from the Australian Bureau of Meteorology'
+    """
+

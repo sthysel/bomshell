@@ -10,4 +10,5 @@ sources = {
     'forecasts': 'ftp://ftp.bom.gov.au/anon/sample/catalogue/Forecasts/',
     'tides': 'ftp://ftp.bom.gov.au/anon/sample/catalogue/Tide/',
 }
+
 CACHE = os.getenv('BOM_CACHE', os.path.join(xdg_cache_home, NAME))
