@@ -81,7 +81,7 @@ Examples
 
 ::
 
-    $ bomshell spatial tabledump --spatial-type forecast_districts --table-format fancy_grid                                                                                                                                              master      bomshell 
+    $ bomshell spatial tabledump --spatial-type forecast_districts --table-format fancy_grid
     ╒═══════════╤════╤════════════════════════════════════════╤═════╤══════════════════════════╕
     │ NSW_PW001 │  1 │ Northern Rivers                        │ NSW │                          │
     ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤

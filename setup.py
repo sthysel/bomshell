@@ -40,7 +40,6 @@ setup(
     zip_safe=False,
     classifiers=[
         'Development Status :: 5 - Production/Stable',
-        'License :: OSI Approved :: GPLv2',
         'Operating System :: Unix',
         'Operating System :: POSIX',
         'Programming Language :: Python',
