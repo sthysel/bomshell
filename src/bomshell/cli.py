@@ -1,7 +1,7 @@
 import click
+
 from . import settings
 from . import spatial
-import requests
 
 
 class CookConfig:

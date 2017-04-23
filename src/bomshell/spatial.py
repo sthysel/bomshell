@@ -1,9 +1,10 @@
 from . import settings
 import click
+import requests
 import os
 
 # spatial database directives, from here a single sqllite db is built
-bom_lookup = {
+bom_source = {
     'forecast_districts': ('IDM00001', 'forecast districts'),
     'marine_zones': ('IDM00003', 'marine zones'),
     'rainfall_districts': ('IDM00004', 'rainfall districts'),
@@ -17,18 +18,31 @@ bom_lookup = {
     'radar_location': ('IDR00007', 'radar location'),
 }
 
-root = 'ftp://ftp.bom.gov.au/anon/home/adfd/spatial/'
+bom_source_root = 'ftp://ftp.bom.gov.au/anon/home/adfd/spatial/'
 
 
-def fetch_spatial_data(lookup_source=bom_lookup):
+def __fetch_file(file_name, file_type='dbf', cache=settings.SPATIAL_CACHE):
+    """
+    :param file_name: Fetch file
+    """
+
+    file_name = file_name + file_type
+    url = bom_source_root + file_name
+    try:
+        requests.get(url)
+    except
+
+
+def fetch_spatial_data(lookup_source=bom_source, cache=settings.SPATIAL_CACHE):
     """
     Fetches the spatial data from BOM 
     
+    :param cache: Where to drop the file
     :param lookup_source: A lookup dict specifying where on BOM's site the lookups are
     """
-    print(lookup_source)
     for name, (file_name, description) in lookup_source.items():
-        click.echo(name)
+        click.echo('Fetching {}'.format(description))
+        __fetch_file(file_name, cache=cache)
 
 
 def create_spatial_database(destination=settings.SPATIAL_DB):
