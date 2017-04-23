@@ -20,9 +20,36 @@ downloaded from the BOM's public ftp site.
 Installation
 ============
 
-.. code:: shell
+.. code::
 
-    pip install bomshell
+    $ pip install bomshell
+
+
+Initial Setup
+=============
+
+Fetch the spatial data from BOM
+
+.. code::
+
+   $ bomshell spatial fetch
+
+
+Build the local database. Table dumps are made from the original
+data directly so its not needed for that.
+
+
+.. code::
+   
+   $ bomshell spatial build
+
+View some spatial data
+
+.. code::
+   
+   $ bomshell spatial tabledump --spatial-type point_places | less -S
+   
+
 
 Sample Usage
 ============
