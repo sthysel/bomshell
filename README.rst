@@ -3,11 +3,14 @@ Overview
 ========
 
 
-`bomshell` is used to retrieve weather data from the Australian Bureau of Meteorology's (BOM)
-public website, and display the result in the shell, where it belongs, as God intended it.
+`bomshell` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
+public ftpsite, and display the result in the shell, where it belongs, as God intended it.
 Not this silly web clownsuit bullshit the kids are all agog about.
 
-
+`bomshell` retrieves the spatial data from the public ftp site and packs it into a local database. Tools are provided to
+build and maintain the local database. Queries can be made of the database and the spatial database files. As the tool matures
+the spatial database will be used to determine the product ID's of reports the user is interested in and those specific products
+downloaded from the BOM's public ftp site.
 
 
 Installation
