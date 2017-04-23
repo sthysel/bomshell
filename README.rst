@@ -7,11 +7,11 @@ Overview
    :alt: Documentation Status
 
 
-`bomshell` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
+``bomshell`` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
 public ftpsite, and display the result in the shell, where it belongs, as God intended it.
 Not this silly web clownsuit bullshit the kids are all agog about.
 
-`bomshell` retrieves the spatial data from the public ftp site and packs it into a local database. Tools are provided to
+``bomshell`` retrieves the spatial data from the public ftp site and packs it into a local database. Tools are provided to
 build and maintain the local database. Queries can be made of the database and the spatial database files. As the tool matures
 the spatial database will be used to determine the product ID's of reports the user is interested in and those specific products
 downloaded from the BOM's public ftp site.
@@ -20,15 +20,16 @@ downloaded from the BOM's public ftp site.
 Installation
 ============
 
-::
+.. code:: shell
 
     pip install bomshell
 
 Sample Usage
-========
+============
 
-`bomshell` command line options
-::
+All ``bomshell`` command line options are avilable from the ``--help`` option
+
+.. code:: shell
 
     $ bomshell
     Usage: bomshell [OPTIONS] COMMAND [ARGS]...
@@ -45,7 +46,10 @@ Sample Usage
     Commands:
       spatial  Spatial database management
 
-::
+
+Sub-commands' options are also available using ``--help`` on the subcommand.
+
+.. code:: shell
 
     $ bomshell spatial
     Usage: bomshell spatial [OPTIONS] COMMAND [ARGS]...
@@ -65,7 +69,9 @@ Sample Usage
       sync       Sync the local spatial data, overwriting...
       tabledump  Dump spatial data to table
 
-::
+ 
+
+.. code:: shell
 
     bomshell spatial tabledump --help
     Usage: bomshell spatial tabledump [OPTIONS]
@@ -83,7 +89,7 @@ Sample Usage
 Examples
 ========
 
-::
+.. code:: shell
 
     $ bomshell spatial tabledump --spatial-type forecast_districts --table-format fancy_grid
     ╒═══════════╤════╤════════════════════════════════════════╤═════╤══════════════════════════╕
