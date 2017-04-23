@@ -94,11 +94,11 @@ def csvdump(config, spatial_type):
 @click.option(
     '-s', '--spatial-type',
     type=click.Choice(fetch_gis.get_gis_types()),
-    help='choose a spatial type from {}'.format(fetch_gis.get_gis_types()))
+    help='choose a spatial type')
 @click.option(
     '-f', '--table-format',
     type=click.Choice(dump_gis.get_table_formats()),
-    help='choose a table type from {}'.format(dump_gis.get_table_formats()))
+    help='choose a table type')
 @bom_config
 def tabledump(config, spatial_type, table_format):
     """
