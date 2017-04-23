@@ -2,6 +2,10 @@
 Overview
 ========
 
+.. image:: https://readthedocs.org/projects/bomshell/badge/?version=latest
+   :target: http://bomshell.readthedocs.io/en/latest/?badge=latest
+   :alt: Documentation Status
+
 
 `bomshell` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
 public ftpsite, and display the result in the shell, where it belongs, as God intended it.
