@@ -56,7 +56,9 @@ setup(
         'requests',
         'pyxdg',
         'dbfread',
-        'ftputil'
+        'dataset',
+        'ftputil',
+        'tabulate'
     ],
     extras_require={},
     setup_requires=[],

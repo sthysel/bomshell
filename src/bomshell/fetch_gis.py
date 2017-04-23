@@ -1,6 +1,11 @@
-from . import settings
+import os
+
 import click
+import dataset
+import dbfread
+
 from . import fetch
+from . import settings
 
 # spatial database directives, from here a single sqllite db is built
 bom_source = {
@@ -21,7 +26,23 @@ ftp_server = 'ftp.bom.gov.au'
 spatial_root = '/anon/home/adfd/spatial/'
 
 
-def __fetch_file(file_name, file_extention='.dbf', cache=settings.SPATIAL_CACHE):
+def get_gis_types():
+    """
+    :return: sorted ist of source types
+    """
+    return sorted(bom_source.keys())
+
+
+def get_source_file_name(data_type, file_extention='.dbf'):
+    """
+    :param data_type: 
+    :return: source file name given type
+    """
+    source_file = bom_source[data_type][0]
+    return os.path.join(settings.SPATIAL_CACHE, source_file + file_extention)
+
+
+def __fetch_file(file_name, file_extention='.dbf'):
     """
     :param file_name: Fetch file
     """
@@ -30,7 +51,7 @@ def __fetch_file(file_name, file_extention='.dbf', cache=settings.SPATIAL_CACHE)
     fetch.get_file(filename=file_name, directory=spatial_root, ftp_server=ftp_server)
 
 
-def fetch_spatial_data(lookup_source=bom_source, cache=settings.SPATIAL_CACHE):
+def fetch_spatial_data(lookup_source=bom_source):
     """
     Fetches the spatial data from BOM 
     
@@ -39,12 +60,26 @@ def fetch_spatial_data(lookup_source=bom_source, cache=settings.SPATIAL_CACHE):
     """
     for name, (file_name, description) in lookup_source.items():
         click.echo('Fetching {}'.format(description))
-        __fetch_file(file_name, cache=cache)
+        __fetch_file(file_name)
 
 
-def create_spatial_database(destination=settings.SPATIAL_DB):
+def create_spatial_database(database=settings.SPATIAL_DB, file_extention='.dbf'):
     """
-    Create a SQL spatial database from the BOM lookups
+    Create a SQL spatial database from the BOM spatial database 
     
     :param: destination 
     """
+
+    for name, (file_name, description) in bom_source.items():
+        click.echo('Packing {} into local DB'.format(description))
+        source_file = os.path.join(settings.SPATIAL_CACHE, file_name + file_extention)
+        db = dataset.connect('sqlite:///' + database)
+        table = db[name]
+
+        for record in dbfread.DBF(source_file, lowernames=True):
+            try:
+                table.insert(record)
+            except Exception as e:
+                click.secho('{} '.format(e.args[0]), fg='red')
+
+

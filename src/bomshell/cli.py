@@ -1,7 +1,10 @@
+import sys
+
 import click
 
+from . import fetch_gis
 from . import settings
-from . import spatial
+from . import dump_gis
 
 
 class CookConfig:
@@ -28,24 +31,83 @@ def main(config, verbose, cache_path):
     settings.CACHE = cache_path
 
 
-@main.command()
+@main.group('spatial')
 @click.option('-o', '--overwrite/--no-overwrite',
               default=settings.OVERWRITE,
               help='Overwrite existing spatial data, default is: {}'.format(settings.OVERWRITE))
 @bom_config
-def build(config, overwrite):
-    """
-    Build the local spatial database
+def spatial(config, overwrite):
+    """ 
+    Spatial database management
     """
     settings.OVERWRITE = overwrite
-    spatial.fetch_spatial_data()
 
 
-@main.command()
+@spatial.command()
+@bom_config
+def fetch(config):
+    """
+    Fetch spatial data 
+    """
+    fetch_gis.fetch_spatial_data()
+
+
+@spatial.command()
 @bom_config
 def sync(config):
     """
-    Sync the local spatial database, overwriting existing files
+    Sync the local spatial data, overwriting existing files
     """
     settings.OVERWRITE = True
-    spatial.fetch_spatial_data()
+    fetch_gis.fetch_spatial_data()
+
+
+@spatial.command()
+@bom_config
+def build(config):
+    """
+    Build the local spatial database
+    """
+    fetch_gis.create_spatial_database()
+
+
+@spatial.command()
+@click.option(
+    '-s', '--spatial-type',
+    type=click.Choice(fetch_gis.get_gis_types()),
+    help='choose a spatial type from {}'.format(fetch_gis.get_gis_types()))
+@bom_config
+def csvdump(config, spatial_type):
+    """
+    Dump spatial data to csv 
+    """
+    if spatial_type is None:
+        click.secho('Select one of the spatial types:', fg='yellow')
+        for e in fetch_gis.get_gis_types():
+            click.secho('--spatial-type {}'.format(e), fg='yellow')
+        sys.exit()
+
+    dump_gis.dump_to_csv(spatial_type)
+
+
+@spatial.command()
+@click.option(
+    '-s', '--spatial-type',
+    type=click.Choice(fetch_gis.get_gis_types()),
+    help='choose a spatial type from {}'.format(fetch_gis.get_gis_types()))
+@click.option(
+    '-f', '--table-format',
+    type=click.Choice(dump_gis.get_table_formats()),
+    help='choose a table type from {}'.format(dump_gis.get_table_formats()))
+@bom_config
+def tabledump(config, spatial_type, table_format):
+    """
+    Dump spatial data to table
+    """
+    if spatial_type is None:
+        click.secho('Select one of the spatial types:', fg='yellow')
+        for e in fetch_gis.get_gis_types():
+            click.secho('--spatial-type {}'.format(e), fg='yellow')
+        sys.exit()
+
+    dump_gis.dump_to_table(spatial_type, table_format=table_format)
