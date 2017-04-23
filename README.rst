@@ -49,7 +49,14 @@ All ``bomshell`` command line options are avilable from the ``--help`` option
 
 Sub-commands' options are also available using ``--help`` on the subcommand.
 
-.. code:: shell
+In order to know what the BOM calls a specific product you need to figure out
+what the product ID is. This is available from the spatial databases. ``bomshell``
+downloads the current spatial data and packs it into a convenient local database
+that can be queried for, amongst other things, product ID's.
+
+The local spatial database can be synced, or re-build as necessary.
+
+.. code::
 
     $ bomshell spatial
     Usage: bomshell spatial [OPTIONS] COMMAND [ARGS]...
@@ -69,11 +76,11 @@ Sub-commands' options are also available using ``--help`` on the subcommand.
       sync       Sync the local spatial data, overwriting...
       tabledump  Dump spatial data to table
 
- 
+All spatial data can be printed to nicely formatted tables. Many output formats are available.
 
-.. code:: shell
+.. code::
 
-    bomshell spatial tabledump --help
+    $ bomshell spatial tabledump --help
     Usage: bomshell spatial tabledump [OPTIONS]
 
       Dump spatial data to table
@@ -89,7 +96,9 @@ Sub-commands' options are also available using ``--help`` on the subcommand.
 Examples
 ========
 
-.. code:: shell
+The spatial data type needs to specified when doing queries on the database.
+
+.. code:: 
 
     $ bomshell spatial tabledump --spatial-type forecast_districts --table-format fancy_grid
     ╒═══════════╤════╤════════════════════════════════════════╤═════╤══════════════════════════╕
@@ -109,5 +118,10 @@ Examples
     ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
     │ NSW_PW008 │  8 │ Central Tablelands                     │ NSW │                          │
     ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+
+
+
+Versioning
+==========
 
 Current version is 1.0.2
