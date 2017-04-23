@@ -97,8 +97,10 @@ Examples
 ========
 
 .. code::
-   bomshell spatial tabledump --spatial-type radar_coverage --table-format rst
 
+   $ bomshell spatial tabledump --spatial-type radar_coverage --table-format rst
+
+Results in the following table:
 
 ================  ==  =======  ========  =======================================  ===========  =============  ===  =======================  ===  =========  =======
 South Doodlakine  58  117.953  -31.777   South Doodlakine                         SthDood      SthDoodlakine  WA   Doppler                  Yes  Public     SthDood
