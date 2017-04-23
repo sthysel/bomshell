@@ -3,20 +3,26 @@ Overview
 ========
 
 
-Retrieve weather data from the Australian  Bureau of Meteorology
+
+
+`bomshell` is used to retrieve weather data from the Australian Bureau of Meteorology's (BOM)
+public website, and display the result in the shell, where it belongs, as God intended it.
+
+Not this silly bullshit web clownsuit nonsense the kids are all agog about.
 
 
 Installation
 ============
 
+
 ::
 
     pip install bomshell
 
-Overview
+Sample Usage
 ========
 
-
+`bomshell` command line options
 ::
 
     $ bomshell
@@ -69,3 +75,5 @@ Overview
       --help                          Show this message and exit.
 
 
+Examples
+========
