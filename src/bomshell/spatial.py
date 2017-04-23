@@ -1,7 +1,6 @@
 from . import settings
 import click
-import requests
-import os
+from . import fetch
 
 # spatial database directives, from here a single sqllite db is built
 bom_source = {
@@ -18,19 +17,17 @@ bom_source = {
     'radar_location': ('IDR00007', 'radar location'),
 }
 
-bom_source_root = 'ftp://ftp.bom.gov.au/anon/home/adfd/spatial/'
+ftp_server = 'ftp.bom.gov.au'
+spatial_root = '/anon/home/adfd/spatial/'
 
 
-def __fetch_file(file_name, file_type='dbf', cache=settings.SPATIAL_CACHE):
+def __fetch_file(file_name, file_extention='.dbf', cache=settings.SPATIAL_CACHE):
     """
     :param file_name: Fetch file
     """
 
-    file_name = file_name + file_type
-    url = bom_source_root + file_name
-    try:
-        requests.get(url)
-    except
+    file_name = file_name + file_extention
+    fetch.get_file(filename=file_name, directory=spatial_root, ftp_server=ftp_server)
 
 
 def fetch_spatial_data(lookup_source=bom_source, cache=settings.SPATIAL_CACHE):

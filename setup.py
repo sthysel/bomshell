@@ -55,7 +55,8 @@ setup(
         'click',
         'requests',
         'pyxdg',
-        'dbfread'
+        'dbfread',
+        'ftputil'
     ],
     extras_require={},
     setup_requires=[],

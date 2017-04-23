@@ -24,15 +24,18 @@ def main(config, verbose, cache_path):
     """ 
     Retrieve weather data from the Australian Bureau of Meteorology
     """
-    config.verbose = verbose
+    settings.VERBOSE = verbose
     settings.CACHE = cache_path
 
 
 @main.command()
+@click.option('-o', '--overwrite/--no-overwrite',
+              default=settings.OVERWRITE,
+              help='Overwrite existing spatial data, default is: {}'.format(settings.OVERWRITE))
 @bom_config
-def update(config):
+def update(config, overwrite):
     """
     Update the local spatial database 
     """
-
+    settings.OVERWRITE = overwrite
     spatial.fetch_spatial_data()

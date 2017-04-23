@@ -1,31 +1,9 @@
+import ftputil
 import os
 import sys
-from pprint import pformat
 
 import click
-import requests
-
 from . import settings
-
-
-def get_filename_from_response(response, verbose=0):
-    """
-    :param response: The response object from requests
-    :param verbose: Chattiness 
-    :return: 
-    """
-    if verbose >= 2:
-        click.echo(pformat(dict(**response.headers)))
-        for r in response.history:
-            click.echo(pformat(dict(**r.headers)))
-
-    try:
-        location = response.history[0].headers.get('Location')
-        filename = location.split('/')[-1]
-    except:
-        raise ValueError('Could not find a filename')
-    else:
-        return filename
 
 
 def remove_existing_file(cache_file_name, overwrite):
@@ -37,32 +15,22 @@ def remove_existing_file(cache_file_name, overwrite):
             sys.exit()
 
 
-def get_filesize(response):
-    try:
-        return int(response.headers.get('Content-Length'))
-    except ValueError:
-        return -1
-
-
-def fetch(config, image, overwrite):
+def get_file(directory, filename, ftp_server, ftp_user='anonymous', ftp_password=''):
     """
-    Fetch images 
+    :param config: 
+    :param directory: 
+    :param filename: 
+    :param ftp_server: 
+    :param ftp_user: 
+    :param ftp_password: 
+    :return: 
     """
 
-    os.makedirs(config.cache_path, exist_ok=True)
+    os.makedirs(settings.SPATIAL_CACHE, exist_ok=True)
+    target_file = os.path.join(settings.SPATIAL_CACHE, filename)
 
-    click.echo('Contacting server...')
-    response = requests.get(settings.IMAGE_SOURCE_LOOKUP[image], stream=True)
+    remove_existing_file(target_file, settings.OVERWRITE)
 
-    fname = get_filename_from_response(response, config.verbose)
-    file_size = get_filesize(response)
-    cache_file_name = os.path.join(config.cache_path, fname)
-    remove_existing_file(cache_file_name, overwrite)
-
-    click.echo('Fetching {}'.format(cache_file_name))
-    if response.status_code == 200:
-        with open(cache_file_name, 'wb') as f:
-            with click.progressbar(length=file_size) as bar:
-                for chunk in response.iter_content(chunk_size=1024):
-                    f.write(chunk)
-                    bar.update(len(chunk))
+    with ftputil.FTPHost(host=ftp_server, user=ftp_user, passwd=ftp_password, timeout=settings.FTP_TIMEOUT) as ftp_host:
+        ftp_host.chdir(directory)
+        ftp_host.download(filename, target_file)
