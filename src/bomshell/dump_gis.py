@@ -34,4 +34,4 @@ def dump_to_table(data_type, table_format=''):
     """
     source_file = get_source_file_name(data_type)
     table = dbfread.DBF(source_file)
-    print(tabulate.tabulate(table, tablefmt=table_format))
+    print(tabulate.tabulate(table, headers='keys', tablefmt=table_format))
