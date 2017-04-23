@@ -3,17 +3,15 @@ Overview
 ========
 
 
-
-
 `bomshell` is used to retrieve weather data from the Australian Bureau of Meteorology's (BOM)
 public website, and display the result in the shell, where it belongs, as God intended it.
+Not this silly web clownsuit bullshit the kids are all agog about.
 
-Not this silly bullshit web clownsuit nonsense the kids are all agog about.
+
 
 
 Installation
 ============
-
 
 ::
 
@@ -77,3 +75,24 @@ Sample Usage
 
 Examples
 ========
+
+::
+
+    $ bomshell spatial tabledump --spatial-type forecast_districts --table-format fancy_grid                                                                                                                                              master      bomshell 
+    ╒═══════════╤════╤════════════════════════════════════════╤═════╤══════════════════════════╕
+    │ NSW_PW001 │  1 │ Northern Rivers                        │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW002 │  2 │ Mid North Coast                        │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW003 │  3 │ Hunter                                 │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW004 │  4 │ Northern Tablelands                    │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW005 │  5 │ Metropolitan                           │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW006 │  6 │ Illawarra                              │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW007 │  7 │ South Coast                            │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
+    │ NSW_PW008 │  8 │ Central Tablelands                     │ NSW │                          │
+    ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
