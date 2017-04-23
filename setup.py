@@ -54,7 +54,8 @@ setup(
     install_requires=[
         'click',
         'requests',
-        'xdg',
+        'pyxdg',
+        'dbfread'
     ],
     extras_require={},
     setup_requires=[],

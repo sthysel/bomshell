@@ -1,13 +1,15 @@
 import click
 from . import settings
+from . import spatial
 import requests
+
 
 class CookConfig:
     def __init__(self):
         pass
 
 
-cook_config = click.make_pass_decorator(CookConfig, ensure=True)
+bom_config = click.make_pass_decorator(CookConfig, ensure=True)
 
 
 @click.group()
@@ -16,11 +18,21 @@ cook_config = click.make_pass_decorator(CookConfig, ensure=True)
 @click.option('-c', '--cache-path',
               default=settings.CACHE,
               type=click.Path(),
-              help='Image cache path, Default: {}'.format(settings.CACHE))
-@cook_config
-@click.command()
-def main(verbose, cache_path):
+              help='BOM data cache path, Default: {}'.format(settings.CACHE))
+@bom_config
+def main(config, verbose, cache_path):
     """ 
-    Retrieve weather data from the Australian Bureau of Meteorology'
+    Retrieve weather data from the Australian Bureau of Meteorology
+    """
+    config.verbose = verbose
+    settings.CACHE = cache_path
+
+
+@main.command()
+@bom_config
+def update(config):
+    """
+    Update the local spatial database 
     """
 
+    spatial.fetch_spatial_data()
