@@ -276,4 +276,4 @@ The spatial data type needs to specified when doing queries on the database.
 Versioning
 ==========
 
-Current version is 1.0.2
+Current version is 1.1.0

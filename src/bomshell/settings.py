@@ -2,7 +2,7 @@ import os
 from xdg.BaseDirectory import xdg_cache_home
 from .knobs import get_int, get_bool, get_string
 
-__version__ = '1.0.2'
+__version__ = '1.1.0'
 
 NAME = 'bomshell'
 
