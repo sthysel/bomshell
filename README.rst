@@ -100,4 +100,4 @@ Examples
     │ NSW_PW008 │  8 │ Central Tablelands                     │ NSW │                          │
     ├───────────┼────┼────────────────────────────────────────┼─────┼──────────────────────────┤
 
-Current version is 1.0.1
+Current version is 1.0.2

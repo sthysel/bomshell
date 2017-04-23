@@ -26,7 +26,7 @@ long_description = '{}\n{}'.format(readme, changelog)
 
 setup(
     name='bomshell',
-    version='1.0.1',
+    version='1.0.2',
     license='GPLv2',
     description='Retrieve weather data from the Australian Bureau of Meteorology',
     long_description=long_description,
