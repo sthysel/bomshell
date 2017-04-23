@@ -33,9 +33,19 @@ def main(config, verbose, cache_path):
               default=settings.OVERWRITE,
               help='Overwrite existing spatial data, default is: {}'.format(settings.OVERWRITE))
 @bom_config
-def update(config, overwrite):
+def build(config, overwrite):
     """
-    Update the local spatial database 
+    Build the local spatial database
     """
     settings.OVERWRITE = overwrite
+    spatial.fetch_spatial_data()
+
+
+@main.command()
+@bom_config
+def sync(config):
+    """
+    Sync the local spatial database, overwriting existing files
+    """
+    settings.OVERWRITE = True
     spatial.fetch_spatial_data()
