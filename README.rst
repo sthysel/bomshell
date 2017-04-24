@@ -27,7 +27,7 @@ Installation
 Config
 ======
 
-``bomshell`` is configured using cli options and a .bomshell settings file.
+``bomshell`` is configured using cli options and a ``.bomshell`` settings file.
 To see the valid knobs that can be tuned use the ``knobs`` command: ``$ bomshell knobs``.
 
 To create a fresh ``.bomshell`` config file do ``$ bomshell knobs > ~/.bomshell``
@@ -62,7 +62,7 @@ View some spatial data
 Sample Usage
 ============
 
-All ``bomshell`` command line options are avilable from the ``--help`` option
+All ``bomshell`` command line options are available from the ``--help`` option
 
 .. code:: shell
 
