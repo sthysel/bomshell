@@ -8,8 +8,7 @@ Overview
 
 
 ``bomshell`` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
-public ftpsite, and display the result in the shell, where it belongs, as God intended it.
-Not this silly web clownsuit bullshit the kids are all agog about.
+public ftpsite, and display the result in the shell.
 
 ``bomshell`` retrieves the spatial data from the public ftp site and packs it into a local database. Tools are provided to
 build and maintain the local database. Queries can be made of the database and the spatial database files. As the tool matures
@@ -29,14 +28,9 @@ Config
 ======
 
 ``bomshell`` is configured using cli options and a .bomshell settings file.
-To see the valid knobs that can be tuned use the ``knobs`` command
+To see the valid knobs that can be tuned use the ``knobs`` command: ``$ bomshell knobs``.
 
-.. code::
-   $ bomshell knobs
-
-
-To create a fresh .bomshell config file do
-
+To create a fresh ``.bomshell`` config file do
 
 .. code::
    $ bomshell knobs > ~/.bomshell
@@ -57,15 +51,15 @@ data directly so its not needed for that.
 
 
 .. code::
-   
+
    $ bomshell spatial build
 
 View some spatial data
 
 .. code::
-   
+
    $ bomshell spatial tabledump --spatial-type point_places | less -S
-   
+
 
 
 Sample Usage
