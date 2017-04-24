@@ -31,6 +31,11 @@ def get_file(directory, filename, ftp_server, ftp_user='anonymous', ftp_password
 
     remove_existing_file(target_file, settings.OVERWRITE)
 
-    with ftputil.FTPHost(host=ftp_server, user=ftp_user, passwd=ftp_password, timeout=settings.FTP_TIMEOUT) as ftp_host:
-        ftp_host.chdir(directory)
-        ftp_host.download(filename, target_file)
+    try:
+        with ftputil.FTPHost(host=ftp_server, user=ftp_user, passwd=ftp_password, timeout=settings.FTP_TIMEOUT) as ftp_host:
+            ftp_host.chdir(directory)
+            ftp_host.download(filename, target_file)
+    except ftputil.error.FTPOSError as e:
+        click.secho('FTP timeout fetching {}'.format(filename), fg='red')
+        click.secho('Consider increasing the FTP_TIMEOUT value in .env'.format(filename), fg='red')
+

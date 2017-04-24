@@ -1,9 +1,13 @@
 import os
+
+from dotenv import load_dotenv, find_dotenv
 from xdg.BaseDirectory import xdg_cache_home
+
 from .knobs import get_int, get_bool, get_string
 
-__version__ = '1.1.0'
+load_dotenv(find_dotenv(filename='.bomshell', usecwd=True))
 
+__version__ = '1.1.0'
 NAME = 'bomshell'
 
 CACHE = get_string('BOM_CACHE', os.path.join(xdg_cache_home, NAME))

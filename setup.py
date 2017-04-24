@@ -57,7 +57,9 @@ setup(
         'dbfread',
         'dataset',
         'ftputil',
-        'tabulate'
+        'tabulate',
+        'metar',
+        'python-dotenv',
     ],
     extras_require={},
     setup_requires=[],

@@ -5,6 +5,7 @@ import click
 from . import fetch_gis
 from . import settings
 from . import dump_gis
+from . import knobs
 
 
 class CookConfig:
@@ -31,16 +32,28 @@ def main(config, verbose, cache_path):
     settings.CACHE = cache_path
 
 
+@main.command('knobs')
+@bom_config
+def print_knobs(config):
+    """Print all known settings and their current defaults"""
+
+    click.echo(knobs.get_knob_defaults())
+
+
 @main.group('spatial')
 @click.option('-o', '--overwrite/--no-overwrite',
               default=settings.OVERWRITE,
               help='Overwrite existing spatial data, default is: {}'.format(settings.OVERWRITE))
+@click.option('--ftp-timeout',
+              default=settings.FTP_TIMEOUT,
+              help='FTP Timeout, default is {}s'.format(settings.FTP_TIMEOUT))
 @bom_config
-def spatial(config, overwrite):
+def spatial(config, overwrite, ftp_timeout):
     """ 
     Spatial database management
     """
     settings.OVERWRITE = overwrite
+    settings.FTP_TIMEOUT = ftp_timeout
 
 
 @spatial.command()

@@ -25,6 +25,23 @@ Installation
     $ pip install bomshell
 
 
+Config
+======
+
+``bomshell`` is configured using cli options and a .bomshell settings file.
+To see the valid knobs that can be tuned use the ``knobs`` command
+
+.. code::
+   $ bomshell knobs
+
+
+To create a fresh .bomshell config file do
+
+
+.. code::
+   $ bomshell knobs > ~/.bomshell
+
+
 Initial Setup
 =============
 
@@ -72,6 +89,7 @@ All ``bomshell`` command line options are avilable from the ``--help`` option
 
     Commands:
       spatial  Spatial database management
+      knobs    Print all known settings and their current...
 
 
 Sub-commands' options are also available using ``--help`` on the subcommand.
