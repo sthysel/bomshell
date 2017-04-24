@@ -37,5 +37,6 @@ def get_file(directory, filename, ftp_server, ftp_user='anonymous', ftp_password
             ftp_host.download(filename, target_file)
     except ftputil.error.FTPOSError as e:
         click.secho('FTP timeout fetching {}'.format(filename), fg='red')
-        click.secho('Consider increasing the FTP_TIMEOUT value in .env'.format(filename), fg='red')
+        click.secho('Consider using the --ftp-timeout option', fg='red')
+        click.secho('or increasing the FTP_TIMEOUT value in .bomshell'.format(filename), fg='red')
 
