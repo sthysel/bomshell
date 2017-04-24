@@ -30,10 +30,7 @@ Config
 ``bomshell`` is configured using cli options and a .bomshell settings file.
 To see the valid knobs that can be tuned use the ``knobs`` command: ``$ bomshell knobs``.
 
-To create a fresh ``.bomshell`` config file do
-
-.. code::
-   $ bomshell knobs > ~/.bomshell
+To create a fresh ``.bomshell`` config file do ``$ bomshell knobs > ~/.bomshell``
 
 
 Initial Setup
