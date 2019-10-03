@@ -1,6 +1,6 @@
 click==6.7
 requests==2.13.0
-pyxdg==0.25
+pyxdg==0.26
 metar==1.5.0
 dbfread==2.0.7
 dataset==0.8.0
