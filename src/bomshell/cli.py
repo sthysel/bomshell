@@ -7,6 +7,7 @@ from . import dump_gis
 from . import fetch_gis
 from . import knobs
 from . import settings
+from . import visualize
 
 
 class CookConfig:
@@ -116,3 +117,42 @@ def tabledump(config, spatial_type, table_format):
         sys.exit()
 
     dump_gis.dump_to_table(spatial_type, table_format=table_format)
+
+
+@spatial.command()
+@click.option(
+    "-s",
+    "--spatial-type",
+    type=click.Choice(visualize.get_visualizable_types()),
+    help="choose a spatial type to visualize",
+)
+@click.option(
+    "-o",
+    "--output",
+    type=click.Path(),
+    help="output HTML file path (default: <spatial-type>.html)",
+)
+@click.option(
+    "--no-open",
+    is_flag=True,
+    help="don't open the map in a browser",
+)
+@bom_config
+def map(config, spatial_type, output, no_open):
+    """
+    Generate an interactive map of spatial data
+    """
+    if spatial_type is None:
+        click.secho("Select one of the visualizable spatial types:", fg="yellow")
+        for t in visualize.get_visualizable_types():
+            click.secho(f"  --spatial-type {t}", fg="yellow")
+        sys.exit()
+
+    try:
+        output_path = visualize.create_map(spatial_type, output)
+        click.secho(f"Map saved to: {output_path}", fg="green")
+        if not no_open:
+            visualize.open_in_browser(output_path)
+    except FileNotFoundError as e:
+        click.secho(str(e), fg="red")
+        sys.exit(1)

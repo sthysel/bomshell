@@ -25,6 +25,9 @@ bom_source = {
 ftp_server = "ftp.bom.gov.au"
 spatial_root = "/anon/home/adfd/spatial/"
 
+# Shapefile components to fetch
+SHAPEFILE_EXTENSIONS = [".dbf", ".shp", ".shx", ".prj"]
+
 
 def get_gis_types():
     """
@@ -53,14 +56,16 @@ def __fetch_file(file_name, file_extention=".dbf"):
 
 def fetch_spatial_data(lookup_source=bom_source):
     """
-    Fetches the spatial data from BOM
+    Fetches the spatial data from BOM including all shapefile components.
 
     :param cache: Where to drop the file
     :param lookup_source: A lookup dict specifying where on BOM's site the lookups are
     """
+    click.echo(f"Writing spatial data to: {settings.SPATIAL_CACHE}")
     for _name, (file_name, description) in lookup_source.items():
         click.echo(f"Fetching {description}")
-        __fetch_file(file_name)
+        for ext in SHAPEFILE_EXTENSIONS:
+            __fetch_file(file_name, file_extention=ext)
 
 
 def create_spatial_database(database=settings.SPATIAL_DB, file_extention=".dbf"):
@@ -69,7 +74,7 @@ def create_spatial_database(database=settings.SPATIAL_DB, file_extention=".dbf")
 
     :param: destination
     """
-
+    click.echo(f"Building database: {database}")
     for name, (file_name, description) in bom_source.items():
         click.echo(f"Packing {description} into local DB")
         source_file = os.path.join(settings.SPATIAL_CACHE, file_name + file_extention)
