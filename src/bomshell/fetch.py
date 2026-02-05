@@ -1,8 +1,9 @@
-import ftputil
 import os
 import sys
 
 import click
+import ftputil
+
 from . import settings
 
 
@@ -11,19 +12,19 @@ def remove_existing_file(cache_file_name, overwrite):
         if overwrite:
             os.remove(cache_file_name)
         else:
-            click.secho('{} already exists. Use the --override option to re-download'.format(cache_file_name), fg='red')
+            click.secho(f"{cache_file_name} already exists. Use the --override option to re-download", fg="red")
             sys.exit()
 
 
-def get_file(directory, filename, ftp_server, ftp_user='anonymous', ftp_password=''):
+def get_file(directory, filename, ftp_server, ftp_user="anonymous", ftp_password=""):
     """
-    :param config: 
-    :param directory: 
-    :param filename: 
-    :param ftp_server: 
-    :param ftp_user: 
-    :param ftp_password: 
-    :return: 
+    :param config:
+    :param directory:
+    :param filename:
+    :param ftp_server:
+    :param ftp_user:
+    :param ftp_password:
+    :return:
     """
 
     os.makedirs(settings.SPATIAL_CACHE, exist_ok=True)
@@ -35,8 +36,7 @@ def get_file(directory, filename, ftp_server, ftp_user='anonymous', ftp_password
         with ftputil.FTPHost(host=ftp_server, user=ftp_user, passwd=ftp_password, timeout=settings.FTP_TIMEOUT) as ftp_host:
             ftp_host.chdir(directory)
             ftp_host.download(filename, target_file)
-    except ftputil.error.FTPOSError as e:
-        click.secho('FTP timeout fetching {}'.format(filename), fg='red')
-        click.secho('Consider using the --ftp-timeout option', fg='red')
-        click.secho('or increasing the FTP_TIMEOUT value in .bomshell'.format(filename), fg='red')
-
+    except ftputil.error.FTPOSError:
+        click.secho(f"FTP timeout fetching {filename}", fg="red")
+        click.secho("Consider using the --ftp-timeout option", fg="red")
+        click.secho("or increasing the FTP_TIMEOUT value in .bomshell".format(), fg="red")
