@@ -22,7 +22,7 @@ project = "bomshell"
 year = "2017"
 author = "sthysel"
 copyright = f"{year}, {author}"
-version = release = "1.1.0"
+version = release = "2.0.0"
 
 pygments_style = "trac"
 templates_path = ["."]
