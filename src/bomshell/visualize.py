@@ -2,6 +2,7 @@
 
 import os
 import webbrowser
+from typing import Any
 
 import folium
 import geopandas as gpd
@@ -10,7 +11,8 @@ from . import settings
 
 # Spatial types configuration
 # "point" for marker-based, "polygon" for shape-based
-SPATIAL_CONFIGS = {
+# Icons from Font Awesome (fa prefix) - https://fontawesome.com/v4/icons/
+SPATIAL_CONFIGS: dict[str, dict[str, Any]] = {
     "radar_location": {
         "file": "IDR00007",
         "type": "point",
@@ -18,8 +20,10 @@ SPATIAL_CONFIGS = {
         "lon": "Longitude",
         "name": "Full_Name",
         "popup_fields": ["Full_Name", "State", "Type", "Status"],
-        "color": "red",
-        "icon": "signal",
+        "color": "darkred",
+        "icon": "bullseye",  # Radar dish representation
+        "label": "Radar Locations",
+        "cluster": False,  # Few points, no clustering needed
     },
     "radar_coverage": {
         "file": "IDR00006",
@@ -28,8 +32,10 @@ SPATIAL_CONFIGS = {
         "lon": "LONGITUDE",
         "name": "FULL_NAME",
         "popup_fields": ["FULL_NAME", "STATE", "TYPE", "STATUS"],
-        "color": "blue",
-        "icon": "signal",
+        "color": "cadetblue",
+        "icon": "rss",  # Signal/broadcast icon
+        "label": "Radar Coverage",
+        "cluster": False,
     },
     "point_places": {
         "file": "IDM00013",
@@ -39,7 +45,9 @@ SPATIAL_CONFIGS = {
         "name": "PT_NAME",
         "popup_fields": ["PT_NAME", "STATE_NAME", "ELEVATION"],
         "color": "green",
-        "icon": "cloud",
+        "icon": "tint",  # Raindrop - weather related
+        "label": "Weather Stations",
+        "cluster": True,  # Many points, use clustering
     },
     "forecast_districts": {
         "file": "IDM00001",
@@ -48,6 +56,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["AAC", "DIST_NAME", "STATE_CODE"],
         "fill_color": "YlOrRd",
         "line_color": "blue",
+        "label": "Forecast Districts",
     },
     "marine_zones": {
         "file": "IDM00003",
@@ -56,6 +65,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["AAC", "DIST_NAME", "STATE_CODE", "TYPE"],
         "fill_color": "YlGnBu",
         "line_color": "navy",
+        "label": "Marine Zones",
     },
     "fire_districts": {
         "file": "IDM00007",
@@ -64,6 +74,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["AAC", "DIST_NAME", "STATE_CODE"],
         "fill_color": "OrRd",
         "line_color": "darkred",
+        "label": "Fire Districts",
     },
     "rainfall_districts": {
         "file": "IDM00004",
@@ -72,6 +83,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["DIST_NAME", "STATE"],
         "fill_color": "Blues",
         "line_color": "blue",
+        "label": "Rainfall Districts",
     },
     "cyclone_areas": {
         "file": "IDM00005",
@@ -80,6 +92,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["Name"],
         "fill_color": "PuRd",
         "line_color": "purple",
+        "label": "Cyclone Areas",
     },
     "high_sea_areas": {
         "file": "IDM00006",
@@ -88,6 +101,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["NAME"],
         "fill_color": "GnBu",
         "line_color": "darkblue",
+        "label": "High Sea Areas",
     },
     "metros": {
         "file": "IDM00014",
@@ -96,6 +110,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["AAC", "DIST_NAME", "STATE_CODE", "DESCRIPTN"],
         "fill_color": "Purples",
         "line_color": "purple",
+        "label": "Metro Areas",
     },
     "ocean_wind_warning": {
         "file": "IDM00015",
@@ -104,6 +119,7 @@ SPATIAL_CONFIGS = {
         "popup_fields": ["NAME"],
         "fill_color": "BuPu",
         "line_color": "indigo",
+        "label": "Ocean Wind Warning",
     },
 }
 
@@ -127,12 +143,21 @@ def _build_popup_html(record: dict, fields: list[str]) -> str:
     return "<br>".join(lines)
 
 
-def _add_point_layer(m: folium.Map, config: dict, shp_path: str) -> None:
-    """Add point markers to map."""
+def _add_point_layer(feature_group: folium.FeatureGroup, config: dict, shp_path: str) -> None:
+    """Add point markers to a feature group."""
     import dbfread
+    from folium.plugins import MarkerCluster
 
     dbf_path = shp_path.replace(".shp", ".dbf")
     records = list(dbfread.DBF(dbf_path))
+
+    # Use marker cluster for large datasets
+    use_cluster = config.get("cluster", False) and len(records) > 50
+    if use_cluster:
+        marker_target = MarkerCluster(name=config["label"])
+        marker_target.add_to(feature_group)
+    else:
+        marker_target = feature_group
 
     for record in records:
         lat = record.get(config["lat"])
@@ -149,11 +174,11 @@ def _add_point_layer(m: folium.Map, config: dict, shp_path: str) -> None:
             popup=folium.Popup(popup_html, max_width=300),
             tooltip=tooltip,
             icon=folium.Icon(color=config["color"], icon=config["icon"], prefix="fa"),
-        ).add_to(m)
+        ).add_to(marker_target)
 
 
-def _add_polygon_layer(m: folium.Map, config: dict, shp_path: str) -> None:
-    """Add polygon shapes to map."""
+def _add_polygon_layer(feature_group: folium.FeatureGroup, config: dict, shp_path: str) -> None:
+    """Add polygon shapes to a feature group."""
     gdf = gpd.read_file(shp_path)
 
     # Convert to WGS84 if needed
@@ -179,7 +204,6 @@ def _add_polygon_layer(m: folium.Map, config: dict, shp_path: str) -> None:
 
     # Add GeoJson layer
     name_field = config["name"]
-    popup_fields = config["popup_fields"]
 
     geojson = folium.GeoJson(
         gdf,
@@ -191,36 +215,11 @@ def _add_polygon_layer(m: folium.Map, config: dict, shp_path: str) -> None:
         ),
     )
 
-    # Add popups
-    for _, row in gdf.iterrows():
-        popup_lines = []
-        for field in popup_fields:
-            if field in row.index and row[field]:
-                popup_lines.append(f"<b>{field}:</b> {row[field]}")
-        if popup_lines:
-            popup_html = "<br>".join(popup_lines)
-            centroid = row.geometry.centroid
-            folium.Popup(popup_html, max_width=300).add_to(
-                folium.Marker(
-                    location=[centroid.y, centroid.x],
-                    icon=folium.DivIcon(html=""),
-                )
-            )
-
-    geojson.add_to(m)
+    geojson.add_to(feature_group)
 
 
-def create_map(spatial_type: str, output_path: str | None = None) -> str:
-    """
-    Create a folium map for the given spatial type.
-
-    :param spatial_type: Type of spatial data to visualize
-    :param output_path: Output HTML file path (default: <spatial_type>.html in cache)
-    :return: Path to the generated HTML file
-    """
-    if spatial_type not in SPATIAL_CONFIGS:
-        raise ValueError(f"Unknown spatial type: {spatial_type}. Available: {get_visualizable_types()}")
-
+def _add_layer(m: folium.Map, spatial_type: str, show: bool = True) -> None:
+    """Add a spatial layer to the map."""
     config = SPATIAL_CONFIGS[spatial_type]
     shp_path = os.path.join(settings.SPATIAL_CACHE, f"{config['file']}.shp")
     dbf_path = os.path.join(settings.SPATIAL_CACHE, f"{config['file']}.dbf")
@@ -231,18 +230,55 @@ def create_map(spatial_type: str, output_path: str | None = None) -> str:
     if not os.path.exists(dbf_path):
         raise FileNotFoundError(f"Data file not found: {dbf_path}. Run 'bomshell spatial fetch' first.")
 
-    # Create map centered on Australia
-    m = folium.Map(location=AUSTRALIA_CENTER, zoom_start=DEFAULT_ZOOM, tiles="OpenStreetMap")
+    # Create feature group for this layer
+    feature_group = folium.FeatureGroup(name=config["label"], show=show)
 
     # Add appropriate layer based on type
     if config["type"] == "point":
-        _add_point_layer(m, config, shp_path)
+        _add_point_layer(feature_group, config, shp_path)
     else:
-        _add_polygon_layer(m, config, shp_path)
+        _add_polygon_layer(feature_group, config, shp_path)
+
+    feature_group.add_to(m)
+
+
+def create_map(spatial_types: str | list[str], output_path: str | None = None) -> str:
+    """
+    Create a folium map for one or more spatial types.
+
+    :param spatial_types: Single type or list of spatial data types to visualize
+    :param output_path: Output HTML file path (default: based on types in cache)
+    :return: Path to the generated HTML file
+    """
+    # Normalize to list
+    if isinstance(spatial_types, str):
+        spatial_types = [spatial_types]
+
+    # Validate all types
+    for spatial_type in spatial_types:
+        if spatial_type not in SPATIAL_CONFIGS:
+            raise ValueError(f"Unknown spatial type: {spatial_type}. Available: {get_visualizable_types()}")
+
+    # Create map centered on Australia
+    m = folium.Map(location=AUSTRALIA_CENTER, zoom_start=DEFAULT_ZOOM, tiles="OpenStreetMap")
+
+    # Add each layer (polygons first, then points on top)
+    polygon_types = [t for t in spatial_types if SPATIAL_CONFIGS[t]["type"] == "polygon"]
+    point_types = [t for t in spatial_types if SPATIAL_CONFIGS[t]["type"] == "point"]
+
+    for spatial_type in polygon_types + point_types:
+        _add_layer(m, spatial_type, show=True)
+
+    # Add layer control if multiple layers
+    if len(spatial_types) > 1:
+        folium.LayerControl(collapsed=False).add_to(m)
 
     # Determine output path
     if output_path is None:
-        output_path = os.path.join(settings.CACHE, f"{spatial_type}.html")
+        if len(spatial_types) == 1:
+            output_path = os.path.join(settings.CACHE, f"{spatial_types[0]}.html")
+        else:
+            output_path = os.path.join(settings.CACHE, "combined_map.html")
 
     m.save(output_path)
     return output_path

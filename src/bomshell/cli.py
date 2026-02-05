@@ -123,14 +123,16 @@ def tabledump(config, spatial_type, table_format):
 @click.option(
     "-s",
     "--spatial-type",
+    "spatial_types",
     type=click.Choice(visualize.get_visualizable_types()),
-    help="choose a spatial type to visualize",
+    multiple=True,
+    help="spatial type(s) to visualize (can specify multiple)",
 )
 @click.option(
     "-o",
     "--output",
     type=click.Path(),
-    help="output HTML file path (default: <spatial-type>.html)",
+    help="output HTML file path",
 )
 @click.option(
     "--no-open",
@@ -138,19 +140,26 @@ def tabledump(config, spatial_type, table_format):
     help="don't open the map in a browser",
 )
 @bom_config
-def map(config, spatial_type, output, no_open):
+def map(config, spatial_types, output, no_open):
     """
-    Generate an interactive map of spatial data
+    Generate an interactive map of spatial data.
+
+    Combine multiple layers by specifying -s multiple times:
+
+        bomshell spatial map -s forecast_districts -s radar_location
     """
-    if spatial_type is None:
-        click.secho("Select one of the visualizable spatial types:", fg="yellow")
+    if not spatial_types:
+        click.secho("Select one or more spatial types:", fg="yellow")
         for t in visualize.get_visualizable_types():
-            click.secho(f"  --spatial-type {t}", fg="yellow")
+            click.secho(f"  -s {t}", fg="yellow")
+        click.secho("\nCombine layers: -s forecast_districts -s radar_location", fg="cyan")
         sys.exit()
 
     try:
-        output_path = visualize.create_map(spatial_type, output)
+        output_path = visualize.create_map(list(spatial_types), output)
         click.secho(f"Map saved to: {output_path}", fg="green")
+        if len(spatial_types) > 1:
+            click.secho("Use layer control (top-right) to toggle layers", fg="cyan")
         if not no_open:
             visualize.open_in_browser(output_path)
     except FileNotFoundError as e:

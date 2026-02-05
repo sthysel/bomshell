@@ -2,6 +2,12 @@
 Overview
 ========
 
+.. image:: docs/map1.png
+   :alt: BOM Spatial Data Visualization
+   :align: center
+
+|
+
 .. image:: https://readthedocs.org/projects/bomshell/badge/?version=latest
    :target: http://bomshell.readthedocs.io/en/latest/?badge=latest
    :alt: Documentation Status
@@ -71,6 +77,18 @@ Interactive Maps
 
 Generate interactive HTML maps of BOM spatial data. Maps open automatically in your browser.
 
+.. image:: docs/map1.png
+   :alt: Forecast Districts with Radar Locations
+   :align: center
+   :width: 80%
+
+.. image:: docs/map2.png
+   :alt: Weather Stations Map
+   :align: center
+   :width: 80%
+
+|
+
 **Point data** (markers on map):
 
 .. code::
@@ -111,6 +129,21 @@ Generate interactive HTML maps of BOM spatial data. Maps open automatically in y
 
    # Ocean wind warning areas
    $ bomshell spatial map -s ocean_wind_warning
+
+**Combined maps** (multiple layers with toggle control):
+
+.. code::
+
+   # Radar locations over forecast districts
+   $ bomshell spatial map -s forecast_districts -s radar_location
+
+   # Fire districts with weather stations
+   $ bomshell spatial map -s fire_districts -s point_places
+
+   # Multiple polygon layers
+   $ bomshell spatial map -s forecast_districts -s marine_zones -s radar_location
+
+Combined maps include a layer control (top-right) to toggle each layer on/off.
 
 Map options:
 
