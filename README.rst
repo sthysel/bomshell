@@ -13,12 +13,66 @@ Overview
    :alt: Documentation Status
 
 
-``bomshell`` is used to retrieve weather data from the `Australian Bureau of Meteorology's (BOM) <http://www.bom.gov.au/>`_
-public FTP site, and display the result in the shell or as interactive maps.
+``bomshell`` retrieves weather data from the `Australian Bureau of Meteorology (BOM) <http://www.bom.gov.au/>`_.
+Get forecasts in the terminal, fetch spatial data (shapefiles), build a local SQLite database, and generate
+interactive maps — all from the command line.
 
-``bomshell`` retrieves spatial data (shapefiles) from BOM's public FTP site and packs it into a local SQLite database.
-Tools are provided to build and maintain the local database, export data to various formats, and generate interactive
-maps for visualization.
+
+Quick Start
+===========
+
+.. code::
+
+    $ uv tool install bomshell
+
+    $ bomshell
+    Roleystone, WA 6111
+
+    Tue 10 Feb — Mostly sunny. (29°/16°)
+      Rain: 5% chance | UV: extreme (12) | Fire: High
+      Mostly sunny. Winds southeasterly 25 to 40 km/h turning easterly
+      25 to 35 km/h in the evening.
+
+    Wed 11 Feb — Wind easing. Sunny. (28°/13°)
+      Rain: 0% chance | UV: extreme (12) | Fire: High
+      Sunny. Winds easterly 30 to 45 km/h.
+
+    Thu 12 Feb — Sunny. (31°/15°)
+      Rain: 0% chance | UV: extreme (12) | Fire: Moderate
+      Sunny. Winds easterly 25 to 35 km/h turning southerly 15 to 20 km/h
+      during the afternoon then becoming light during the evening.
+
+    ...
+
+With no arguments ``bomshell`` shows the 7-day forecast for the default town
+(Roleystone). Pass a town name to look up somewhere else:
+
+.. code::
+
+    $ bomshell forecast Perth
+    $ bomshell forecast "Byron Bay"
+
+
+JSON Output
+===========
+
+Every command supports ``--json`` for machine-readable output, useful for
+status-bar widgets (waybar, i3blocks, etc.):
+
+.. code::
+
+    $ bomshell --json forecast Perth
+    {
+      "location": {"geohash": "...", "name": "Perth", ...},
+      "forecast": {"data": [...]}
+    }
+
+    $ bomshell --json knobs
+    {
+      "BOM_CACHE": "/home/user/.cache/bomshell",
+      "BOM_FTP_TIMEOUT": 5,
+      ...
+    }
 
 
 Installation
@@ -54,8 +108,11 @@ To create a fresh ``.bomshell`` config file:
     $ bomshell knobs > ~/.bomshell
 
 
+Spatial Data
+============
+
 Initial Setup
-=============
+-------------
 
 Fetch the spatial data (shapefiles) from BOM:
 
@@ -73,7 +130,7 @@ Build the local SQLite database (optional, for database queries):
 
 
 Interactive Maps
-================
+----------------
 
 Generate interactive HTML maps of BOM spatial data. Maps open automatically in your browser.
 
@@ -159,67 +216,24 @@ Maps are saved to ``~/.cache/bomshell/`` by default.
 
 
 Data Export
-===========
+-----------
 
-Export spatial data to tables or CSV:
+Export spatial data to Rich tables or CSV:
 
 .. code::
 
    # View as formatted table
-   $ bomshell spatial tabledump -s radar_coverage -f fancy_grid
+   $ bomshell spatial tabledump -s radar_coverage
 
    # Export to CSV
    $ bomshell spatial csvdump -s point_places > places.csv
 
-Available table formats: ``fancy_grid``, ``grid``, ``html``, ``jira``, ``latex``, ``pipe``, ``plain``, ``psql``, ``rst``, ``simple``, ``tsv``, and more.
-
-
-Sample Usage
-============
-
-All ``bomshell`` command line options are available from the ``--help`` option:
-
-.. code:: shell
-
-    $ bomshell --help
-    Usage: bomshell [OPTIONS] COMMAND [ARGS]...
-
-      Retrieve weather data from the Australian Bureau of Meteorology
-
-    Options:
-      --version              Show the version and exit.
-      -v, --verbose          Level of verbosity of logs
-      -c, --cache-path PATH  BOM data cache path
-      --help                 Show this message and exit.
-
-    Commands:
-      knobs    Print all known settings and their current defaults
-      spatial  Spatial database management
-
-.. code:: shell
-
-    $ bomshell spatial --help
-    Usage: bomshell spatial [OPTIONS] COMMAND [ARGS]...
-
-      Spatial database management
-
-    Options:
-      -o, --overwrite / --no-overwrite
-                                      Overwrite existing spatial data
-      --ftp-timeout INTEGER           FTP Timeout in seconds
-      --help                          Show this message and exit.
-
-    Commands:
-      build      Build the local spatial database
-      csvdump    Dump spatial data to csv
-      fetch      Fetch spatial data
-      map        Generate an interactive map of spatial data
-      sync       Sync the local spatial data, overwriting existing files
-      tabledump  Dump spatial data to table
+   # Export as JSON
+   $ bomshell --json spatial tabledump -s radar_coverage
 
 
 Available Spatial Types
-=======================
+-----------------------
 
 ===================  ===========  =====================================================
 Type                 Data Format  Description
