@@ -2,13 +2,12 @@ import csv
 import sys
 
 import dbfread
-import tabulate
+from rich.console import Console
+from rich.table import Table
 
-from bomshell.fetch_gis import get_source_file_name
-
-
-def get_table_formats():
-    return sorted(tabulate.tabulate_formats)
+from .fetch_gis import get_source_file_name
+from .output import emit_json
+from .output import is_json_mode
 
 
 def dump_to_csv(data_type):
@@ -26,12 +25,23 @@ def dump_to_csv(data_type):
         writer.writerow(list(record.values()))
 
 
-def dump_to_table(data_type, table_format=""):
+def dump_to_table(data_type):
     """
-    Write spatial data to fancy table
+    Write spatial data as a Rich table, or JSON in --json mode.
     :param data_type:
     :return:
     """
     source_file = get_source_file_name(data_type)
-    table = dbfread.DBF(source_file)
-    print(tabulate.tabulate(table, headers="keys", tablefmt=table_format))
+    dbf = dbfread.DBF(source_file)
+
+    if is_json_mode():
+        emit_json([dict(record) for record in dbf])
+        return
+
+    rich_table = Table(show_header=True, header_style="bold cyan")
+    for name in dbf.field_names:
+        rich_table.add_column(name)
+    for record in dbf:
+        rich_table.add_row(*[str(v) for v in record.values()])
+
+    Console().print(rich_table)

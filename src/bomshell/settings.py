@@ -18,6 +18,6 @@ SPATIAL_CACHE = os.path.join(CACHE, "spatial_cache/")
 SPATIAL_DB = os.path.join(CACHE, "spatial.sqlite")
 
 OVERWRITE = get_bool("BOM_OVERWRITE_EXISTING_SPATIAL_DATA", False)
-VERBOSE = 0
+VERBOSE: int = 0
 
 FTP_TIMEOUT = get_int("BOM_FTP_TIMEOUT", 5)

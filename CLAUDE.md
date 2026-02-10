@@ -18,7 +18,7 @@ just test-cov     # Run tests with coverage
 just lint         # Lint code
 just fmt          # Format code
 just fix          # Auto-fix linting issues
-just typecheck    # Run mypy
+just typecheck    # Run ty
 just pre-commit   # Run all pre-commit hooks
 just qa           # Run lint + typecheck + test
 just build        # Build package

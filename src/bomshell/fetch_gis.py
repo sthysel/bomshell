@@ -1,11 +1,12 @@
 import os
 
-import click
 import dataset
 import dbfread
 
 from . import fetch
 from . import settings
+from .output import print_error
+from .output import print_info
 
 # spatial database directives, from here a single sqllite db is built
 bom_source = {
@@ -61,9 +62,9 @@ def fetch_spatial_data(lookup_source=bom_source):
     :param cache: Where to drop the file
     :param lookup_source: A lookup dict specifying where on BOM's site the lookups are
     """
-    click.echo(f"Writing spatial data to: {settings.SPATIAL_CACHE}")
+    print_info(f"Writing spatial data to: {settings.SPATIAL_CACHE}")
     for _name, (file_name, description) in lookup_source.items():
-        click.echo(f"Fetching {description}")
+        print_info(f"Fetching {description}")
         for ext in SHAPEFILE_EXTENSIONS:
             __fetch_file(file_name, file_extention=ext)
 
@@ -74,9 +75,9 @@ def create_spatial_database(database=settings.SPATIAL_DB, file_extention=".dbf")
 
     :param: destination
     """
-    click.echo(f"Building database: {database}")
+    print_info(f"Building database: {database}")
     for name, (file_name, description) in bom_source.items():
-        click.echo(f"Packing {description} into local DB")
+        print_info(f"Packing {description} into local DB")
         source_file = os.path.join(settings.SPATIAL_CACHE, file_name + file_extention)
         db = dataset.connect("sqlite:///" + database)
         table = db[name]
@@ -85,4 +86,4 @@ def create_spatial_database(database=settings.SPATIAL_DB, file_extention=".dbf")
             try:
                 table.insert(record)
             except Exception as e:
-                click.secho(f"{e.args[0]} ", fg="red")
+                print_error(f"{e.args[0]} ")

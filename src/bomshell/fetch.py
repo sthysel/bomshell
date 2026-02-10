@@ -1,9 +1,11 @@
 import os
 
-import click
 import ftputil
+import ftputil.error
 
 from . import settings
+from .output import print_error
+from .output import print_warning
 
 
 def remove_existing_file(cache_file_name, overwrite):
@@ -17,7 +19,7 @@ def remove_existing_file(cache_file_name, overwrite):
             return True
         else:
             if settings.VERBOSE:
-                click.secho(f"Skipping {cache_file_name} (already exists)", fg="yellow")
+                print_warning(f"Skipping {cache_file_name} (already exists)")
             return False
     return True
 
@@ -44,12 +46,12 @@ def get_file(directory, filename, ftp_server, ftp_user="anonymous", ftp_password
             ftp_host.chdir(directory)
             if not ftp_host.path.exists(filename):
                 if settings.VERBOSE:
-                    click.secho(f"File not found on server: {filename}", fg="yellow")
+                    print_warning(f"File not found on server: {filename}")
                 return False
             ftp_host.download(filename, target_file)
             return True
     except ftputil.error.FTPOSError:
-        click.secho(f"FTP timeout fetching {filename}", fg="red")
-        click.secho("Consider using the --ftp-timeout option", fg="red")
-        click.secho("or increasing the FTP_TIMEOUT value in .bomshell", fg="red")
+        print_error(f"FTP timeout fetching {filename}")
+        print_error("Consider using the --ftp-timeout option")
+        print_error("or increasing the FTP_TIMEOUT value in .bomshell")
         return False
